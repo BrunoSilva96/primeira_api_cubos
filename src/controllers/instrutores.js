@@ -1,4 +1,6 @@
-let {instrutores, identificadorInstrutor} = require("../database");
+const {aulas} = require("../database/aulas");
+let {identificadorAula} = require("../database/aulas");
+let {instrutores, identificadorInstrutor} = require("../database/instrutores");
 
 const listarInstrutores = (req, res) => {
   return res.status(200).json(instrutores);
@@ -100,6 +102,55 @@ const excluirInstrutor = (req, res) => {
   return res.status(204).send();
 };
 
+const obterAulasDoInstrutor = (req, res) => {
+  const {id} = req.params;
+
+  const instrutor = instrutores.find((instrutor) => {
+    return instrutor.id === Number(id);
+  });
+
+  if (!instrutor) {
+    return res.status(400).json({message: "Instrutor não existe"});
+  }
+
+  const aulasDoInstrutor = aulas.filter((aula) => {
+    return aula.idInstrutor === Number(id);
+  });
+
+  return res.status(400).json(aulasDoInstrutor);
+};
+
+const cadastrarAula = (req, res) => {
+  const {id} = req.params;
+  const {titulo, descricao} = req.body;
+
+  const instrutor = instrutores.find((instrutor) => {
+    return instrutor.id === Number(id);
+  });
+
+  if (!instrutor) {
+    return res.status(400).json({message: "Instrutor não existe"});
+  }
+
+  if (!titulo) {
+    return res.status(400).json({message: "O titulo é obrigatorio!"});
+  }
+  if (!descricao) {
+    return res.status(400).json({message: "O descricao é obrigatorio!"});
+  }
+
+  const aula = {
+    id: identificadorAula++,
+    idInstrutor: Number(id),
+    titulo: titulo,
+    descricao: descricao,
+  };
+
+  aulas.push(aula);
+
+  return res.status(201).json(aula);
+};
+
 module.exports = {
   listarInstrutores,
   obterInstrutor,
@@ -107,4 +158,6 @@ module.exports = {
   atualizarInstrutor,
   atualizatStatusInstrutor,
   excluirInstrutor,
+  obterAulasDoInstrutor,
+  cadastrarAula,
 };

@@ -1,4 +1,4 @@
-const bancoDeDados = {
+const bancoDeDadosInstrutores = {
   identificadorInstrutor: 3,
   instrutores: [
     {
@@ -16,4 +16,4 @@ const bancoDeDados = {
   ],
 };
 
-module.exports = bancoDeDados;
+module.exports = bancoDeDadosInstrutores;
